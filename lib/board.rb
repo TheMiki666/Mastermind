@@ -2,8 +2,8 @@ module Mastermind
   require 'colorize'
 
   class Board
-    AUTORIZED_COLORS = %w[R Y B G O P]
-    # Red, yellow, blue, green, orange and purple
+    AUTORIZED_COLORS = %w[R Y B G C M]
+    # Red, yellow, blue, green, cyan and magenta
     CHIPS_PER_ROW = 4
     ROWS_PER_BOARD = 12
 
@@ -111,10 +111,35 @@ module Mastermind
         puts 'Board is empty'
       else
         (0..@next_row - 1).each do |i|
-          puts "Row #{i > 8 ? '' : '0'}#{i + 1}:#{@rows[i]} => #{@result[i][0]} wounded, #{@result[i][1]} dead"
+          print "Row #{i > 8 ? '' : '0'}#{i + 1}: ".colorize(:grey)
+          paint_chips(@rows[i])
+          print ' => '.colorize(:grey)
+          print "#{@result[i][0]} wounded, "
+          puts "#{@result[i][1]} dead".colorize(:red)
         end
       end
       puts
+    end
+
+    def paint_chips(code)
+      color = ''
+      (0..CHIPS_PER_ROW - 1).each do |i|
+        case code[i]
+        when 'C'
+          color = :cyan
+        when 'M'
+          color = :magenta
+        when 'R'
+          color = :red
+        when 'G'
+          color = :green
+        when 'B'
+          color = :blue
+        when 'Y'
+          color = :yellow
+        end
+        print code[i].colorize(color)
+      end
     end
   end
 end
