@@ -97,6 +97,15 @@ module Mastermind
       @next_row >= ROWS_PER_BOARD
     end
 
+    def has_won?
+      if @next_row == 0
+        false
+      else
+        # We only check the last row; not all of them
+        @result[@next_row - 1][1] == CHIPS_PER_ROW
+      end
+    end
+
     def draw_board
       if @next_row == 0
         puts 'Board is empty'
