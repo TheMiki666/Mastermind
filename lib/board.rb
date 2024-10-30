@@ -11,9 +11,15 @@ module Mastermind
       clear
     end
 
-    # TODO: borra este método cuando el programa funcione
+    # TODO: MIRA A VER QUÉ CODIGOS SON PUBLICOS Y CUALES PRIVADOS
     def set_secret_code(code)
       @secret_code = code
+    end
+
+    def say_secret_code
+      print 'The secret code was '
+      paint_chips(@secret_code)
+      puts
     end
 
     def create_secret_code
@@ -21,6 +27,15 @@ module Mastermind
       (0..CHIPS_PER_ROW - 1).each do |chip|
         @secret_code.concat(AUTORIZED_COLORS[rand(AUTORIZED_COLORS.length)])
       end
+    end
+
+    # Getters for the AI
+    def AUTORIZED_COLORS
+      AUTORIZED_COLORS
+    end
+
+    def CHIPS_PER_ROW
+      CHIPS_PER_ROW
     end
 
     # Returns true if a string is a correct code (4 autorized colors); false otherwise
@@ -106,15 +121,23 @@ module Mastermind
       end
     end
 
+    def rows_remaining
+      ROWS_PER_BOARD - @next_row
+    end
+
+    def turn_number
+      @next_row + 1
+    end
+
     def draw_board
       if @next_row == 0
         puts 'Board is empty'
       else
         (0..@next_row - 1).each do |i|
-          print "Row #{i > 8 ? '' : '0'}#{i + 1}: ".colorize(:grey)
+          print "Row #{i > 8 ? '' : '0'}#{i + 1}: "
           paint_chips(@rows[i])
-          print ' => '.colorize(:grey)
-          print "#{@result[i][0]} wounded, "
+          print ' => '
+          print "#{@result[i][0]} wounded, ".colorize(:grey)
           puts "#{@result[i][1]} dead".colorize(:red)
         end
       end
