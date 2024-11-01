@@ -1,3 +1,11 @@
+# Class GameManager
+# version 1.1.0
+# The Game Manager controls the flow of the game
+# It is the responsible of filtering the inputs of the player
+# It says when you win or when the computer wins
+# It has two loop games: one for the game when the player is the guesser,
+# and other for the game when the AI is the guesser
+
 module Mastermind
   require_relative 'board'
 
@@ -55,6 +63,7 @@ module Mastermind
       end
     end
 
+    # Game loop where the guesser is the player
     def normal_game_loop
       show_normal_start_message
       finish_loop = 0 # 0: continue  1: winning  2: full board  3: BREAK
@@ -90,6 +99,7 @@ module Mastermind
       end
     end
 
+    # Game loop where the guesser is the AI
     def inverse_game_loop
       @board.clear
       @ai.memory_clear
@@ -126,6 +136,7 @@ module Mastermind
       puts
     end
 
+    # Ends the application
     def finish_game
       puts 'Thank you for playing!'
       puts 'Have a nice day!'
@@ -145,6 +156,7 @@ module Mastermind
       end
     end
 
+    # Asks on console if the guesser is the AI or the player
     def ask_for_guesser
       answer = ''
       loop do
@@ -160,6 +172,7 @@ module Mastermind
       @normal_game = (answer == 'n')
     end
 
+    # Ask for a code on console (normal play)
     def ask_for_code
       answer = ''
       loop do
@@ -179,7 +192,8 @@ module Mastermind
       answer
     end
 
-    # returns false if there is a break
+    # Ask for the secret code on console (inverse game)
+    # Returns false if there is a break
     def ask_for_secret
       secret_code = ''
       loop do
@@ -201,6 +215,7 @@ module Mastermind
       end
     end
 
+    # Complain to the player if the code inserted on console is not correct
     def complain
       puts 'THAT IS NOT A CORRECT COMBINATION OF COLORS!'.colorize(:red)
       show_short_instructions
