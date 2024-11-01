@@ -53,11 +53,12 @@ module Mastermind
       end
     end
 
-    # Compares the code with the secret code, and return an array with the wounded (W) and the deads (D)
+    # Compares the code with the secret code (or another code), and return an array with the wounded (W) and the deads (D)
     # For example: [2,1] means two wounded, one dead
-    # Returs false if the code is not correct or the secret code is empty
-    def compare_code(code)
-      return false if !correct_code?(code) || @secret_code == ''
+    # Returs false if the code or the secret code are not correct
+    # This function is also used for the AI to compare two differents codes (not necesary the secret code)
+    def compare_code(code, secret_code)
+      return false if !correct_code?(code) || !correct_code?(secret_code)
 
       wounded = 0
       dead = 0
@@ -69,7 +70,7 @@ module Mastermind
       # First, we scan for the deads
       (0..CHIPS_PER_ROW - 1).each do |i|
         # First, we check if there is a dead
-        if code[i] == @secret_code[i]
+        if code[i] == secret_code[i]
           used[i] = 2 # We cross out both entered code chip and secret code chip
           dead += 1
         end
@@ -77,7 +78,7 @@ module Mastermind
       # Now we look for woundeds
       (0..CHIPS_PER_ROW - 1).each do |i|
         (0..CHIPS_PER_ROW - 1).each do |j|
-          next unless i != j && used[i] != 2 && used[j] == 0 && code[i] == @secret_code[j]
+          next unless i != j && used[i] != 2 && used[j] == 0 && code[i] == secret_code[j]
 
           used[j] = 1 # We cross out only the secret code chip
           wounded += 1
@@ -97,7 +98,7 @@ module Mastermind
         false
       else
         @rows[@next_row] = code
-        @result[@next_row] = compare_code(code)
+        @result[@next_row] = compare_code(code, @secret_code)
         @next_row += 1
         true
       end

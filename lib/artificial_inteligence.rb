@@ -36,7 +36,7 @@ module Mastermind
       @my_colors = @board.AUTORIZED_COLORS.shuffle
       @dis_chips = '' # the combination of disordered chips
       @combinations = []
-      @comb_index = 0 # Index of the next combination on phase 2
+      @best_approach = 0
     end
 
     # Returns the next movement (a code to try to guess the secret code)
@@ -47,9 +47,21 @@ module Mastermind
         next_color = @my_colors[@board.next_row]
         (@board.CHIPS_PER_ROW - @dis_chips.length).times { response.concat(next_color) }
       elsif @phase == 2
-        response = @combinations[@comb_index]
-        @comb_index += 1
-        @comb_index = 0 if @comb_index >= @combinations.length # This shoud never happens!
+        if @board.get_last_result == [2, 2] # The last result was 2 dead, 2 wounds
+          # Then we filter the combinations; there will remain the combinations whit 2 coincidences (2 deads)
+          @combinations = @combinations.select do |combination|
+            @board.compare_code(@board.get_last_row, combination)[1] >= 2
+          end
+          @best_approach = 2
+        elsif @best_approach < 2 && @board.get_last_result == [3, 1]
+          # The last result was 1 dead, 3 wounds, AND we never reached 2 deads and 2 wounds
+          @combinations = @combinations.select do |combination|
+            @board.compare_code(@board.get_last_row, combination)[1] >= 1
+          end
+          @best_approach = 1
+        end
+        response = @combinations.shift
+
       end
       response
     end
