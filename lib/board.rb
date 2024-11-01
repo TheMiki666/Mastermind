@@ -7,6 +7,8 @@ module Mastermind
     CHIPS_PER_ROW = 4
     ROWS_PER_BOARD = 12
 
+    attr_reader :next_row
+
     def initialize
       clear
     end
@@ -98,6 +100,22 @@ module Mastermind
         @result[@next_row] = compare_code(code)
         @next_row += 1
         true
+      end
+    end
+
+    def get_last_row
+      if @next_row == 0
+        false
+      else
+        @rows[@next_row - 1]
+      end
+    end
+
+    def get_last_result
+      if @next_row == 0
+        false
+      else
+        @result[@next_row - 1]
       end
     end
 
